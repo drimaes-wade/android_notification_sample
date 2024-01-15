@@ -8,8 +8,9 @@
 
     <ImageView
         android:id="@+id/iconImageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:src="@drawable/android_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

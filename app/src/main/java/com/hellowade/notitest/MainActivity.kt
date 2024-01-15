@@ -7,6 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
+import android.graphics.Bitmap.CompressFormat
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.Icon
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +22,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 
 
 class MainActivity : AppCompatActivity() {
@@ -78,6 +85,10 @@ class MainActivity : AppCompatActivity() {
             iconImageView.setImageIcon(icon)
             val packageName = intent.getStringExtra("packageName")
             packageNameTextView.text = packageName
+            packageName?.let {
+                val appIcon = packageManager.getApplicationIcon(it);
+                iconImageView.setImageDrawable(appIcon)
+            }
             val title = intent.getStringExtra("title")
             titleTextView.text = title
             val message = intent.getStringExtra("message")

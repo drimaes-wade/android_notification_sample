@@ -21,8 +21,10 @@ class NotiListenerService : NotificationListenerService() {
 
     private val REPLY_KEYWORDS = arrayOf("reply_message", "android.intent.extra.text")
 
+    var flag = false
+
     @RequiresApi(Build.VERSION_CODES.S)
-    override fun onNotificationPosted(sbn: StatusBarNotification?) {
+        override fun onNotificationPosted(sbn: StatusBarNotification?) {
         super.onNotificationPosted(sbn)
 
         Log.d(TAG, "SBN INFO ${sbn?.id} ${sbn?.tag} ${sbn?.groupKey}")
@@ -41,8 +43,13 @@ class NotiListenerService : NotificationListenerService() {
         notification?.actions?.forEach {
             if (it.remoteInputs != null) {
                 it.remoteInputs.forEach { remoteInputs ->
+//                    Log.d(TAG, "RESULT KEY ${remoteInputs.resultKey}")
                     if (remoteInputs.resultKey != null && isKnownReplyKey(remoteInputs.resultKey)) {
-                        notiAction = it
+                        if(flag){
+                            notiAction = it
+                        }else{
+                            flag = true
+                        }
                     }
                 }
             }
@@ -57,10 +64,23 @@ class NotiListenerService : NotificationListenerService() {
                     "Action: $notiAction\n"
         )
 
-        if (packageName in "com.kakao.talk" && extraTitle == "정우영1") {
-            NotificationReplier(applicationContext, notiAction!!).reply(extraText)
+        if (notiAction != null){
+            if (packageName in "com.kakao.talk" && extraTitle == "정우영1") {
+                NotificationReplier(applicationContext, notiAction!!).reply(extraText)
+            }
         }
 
+    }
+    override fun onNotificationRemoved(sbn: StatusBarNotification?) {
+        super.onNotificationRemoved(sbn)
+
+        Log.d(TAG, "SBN INFO ${sbn?.id} ${sbn?.tag} ${sbn?.groupKey}")
+
+        val packageName: String = sbn?.packageName ?: "Null"
+        val notification: Notification? = sbn?.notification
+        val extras = sbn?.notification?.extras
+
+//        Log.d(TAG, "REMOVED ${extras?.get(Notification.EXTRA_TITLE).toString()}")
 
     }
 
